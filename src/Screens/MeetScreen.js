@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-
+import CommonHeader from '../Components/CommonHeader';
 export default function App() {
   const openMeet = async () => {
     const url = 'https://meet.google.com/amg-uhyt-uqp';
@@ -12,11 +12,19 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.meetButton} onPress={openMeet}>
-        <Icon name="video" size={22} color="#fff" style={{ marginRight: 10 }} />
-        <Text style={styles.text}>Join Google Meet</Text>
-      </TouchableOpacity>
+    <View style={{ flex: 1 }}>
+      <CommonHeader title="Meeting" />
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.meetButton} onPress={openMeet}>
+          <Icon
+            name="video"
+            size={22}
+            color="#fff"
+            style={{ marginRight: 10 }}
+          />
+          <Text style={styles.text}>Join Google Meet</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

@@ -44,6 +44,14 @@ export default function AddressForm({ navigation }) {
     }
 
     navigation.navigate('AddressDisplay', { form });
+    setForm({
+      flat: '',
+      apartment: '',
+      city: '',
+      state: '',
+      country: '',
+      pincode: '',
+    });
   };
 
   return (

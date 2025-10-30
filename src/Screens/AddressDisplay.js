@@ -1,13 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import CommonHeader from '../Components/CommonHeader';
 import colors from '../theme/colors';
-
+import { useNavigation } from '@react-navigation/native';
 export default function AddressDisplay({ route }) {
   const { form } = route.params;
-
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.safeArea}>
       <CommonHeader title="Details Screen" />
@@ -32,6 +38,13 @@ export default function AddressDisplay({ route }) {
             </View>
           ))}
         </View>
+        <TouchableOpacity
+          style={styles.uploadBtn}
+          onPress={() => navigation.goBack()}
+        >
+          {/* <Icon name="upload" color="#fff" size={20} style={{ marginRight: 8 }} /> */}
+          <Text style={styles.uploadText}>Back</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -98,5 +111,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#222',
     marginTop: 2,
+  },
+  uploadBtn: {
+    backgroundColor: '#007AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    padding: 14,
+    borderRadius: 12,
+    margin: 20,
+  },
+  uploadText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
