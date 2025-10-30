@@ -5,20 +5,15 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import colors from '../theme/colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CommonHeader from '../Components/CommonHeader';
+import { useAppContext } from '../context/AppContext';
 export default function AddressForm({ navigation }) {
-  const [form, setForm] = useState({
-    flat: '',
-    apartment: '',
-    city: '',
-    state: '',
-    country: '',
-    pincode: '',
-  });
-
+  const { form, setForm } = useAppContext();
   const [errors, setErrors] = useState({});
   const handleChange = (key, value) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -29,7 +24,6 @@ export default function AddressForm({ navigation }) {
 
   const handleSubmit = () => {
     const newErrors = {};
-
     Object.entries(form).forEach(([key, value]) => {
       if (!value.trim()) {
         newErrors[key] = `${key.replace(/^\w/, c =>
@@ -42,41 +36,46 @@ export default function AddressForm({ navigation }) {
       setErrors(newErrors);
       return;
     }
-
-    navigation.navigate('AddressDisplay', { form });
-    setForm({
-      flat: '',
-      apartment: '',
-      city: '',
-      state: '',
-      country: '',
-      pincode: '',
-    });
+    setForm(form);
+    navigation.navigate('AddressDisplay');
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <CommonHeader title="Form Screen" />
-        {Object.keys(form).map(key => (
-          <View key={key} style={{ marginBottom: 15 }}>
-            <TextInput
-              placeholder={key.replace(/^\w/, c => c.toUpperCase())}
-              value={form[key]}
-              onChangeText={t => handleChange(key, t)}
-              style={[
-                styles.input,
-                errors[key] && { borderColor: 'red', borderWidth: 1.5 },
-              ]}
-              placeholderTextColor="#888"
-            />
-            {errors[key] && <Text style={styles.errorText}>{errors[key]}</Text>}
-          </View>
-        ))}
-
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
+        >
+          <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {Object.keys(form).map(key => (
+              <View key={key} style={{ marginBottom: 25 }}>
+                <TextInput
+                  placeholder={key.replace(/^\w/, c => c.toUpperCase())}
+                  value={form[key]}
+                  onChangeText={t => handleChange(key, t)}
+                  style={[
+                    styles.input,
+                    errors[key] && { borderColor: 'red', borderWidth: 1.5 },
+                  ]}
+                  placeholderTextColor="#888"
+                />
+                {errors[key] && (
+                  <Text style={styles.errorText}>{errors[key]}</Text>
+                )}
+              </View>
+            ))}
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
   );

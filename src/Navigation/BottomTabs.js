@@ -38,8 +38,7 @@ export default function BottomTabs() {
             height: 70,
 
             alignItems: 'center',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
+
             backgroundColor: '#fff',
           },
         }}

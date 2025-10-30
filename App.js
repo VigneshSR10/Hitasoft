@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, StatusBar, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Provider as PaperProvider } from 'react-native-paper';
 import NetInfo from '@react-native-community/netinfo';
-
+import { AppProvider } from './src/context/AppContext';
 import BottomTabs from './src/Navigation/BottomTabs';
 import AppLogo from './src/assets/images/hitasoft_logo.png';
 
@@ -47,9 +47,11 @@ export default function App() {
   }
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <PaperProvider>
-        <BottomTabs />
-      </PaperProvider>
+      <AppProvider>
+        <PaperProvider>
+          <BottomTabs />
+        </PaperProvider>
+      </AppProvider>
     </SafeAreaView>
   );
 }

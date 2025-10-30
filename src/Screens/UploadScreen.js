@@ -15,9 +15,9 @@ import RNFS from 'react-native-fs';
 import FileCard from '../Components/FileCard';
 import CommonHeader from '../Components/CommonHeader';
 import Icon from 'react-native-vector-icons/Feather';
+import { useAppContext } from '../context/AppContext';
 export default function UploadScreen() {
-  const [files, setFiles] = useState([]);
-
+  const { files, setFiles } = useAppContext();
   const askPermission = async () => {
     if (Platform.OS === 'android') {
       let permission;
@@ -71,7 +71,6 @@ export default function UploadScreen() {
           };
 
           setFiles(prev => [...prev, newFile]);
-          console.log(newFile, '---------------------');
         } catch (copyErr) {
           console.error('File Copy Error:', copyErr);
           Alert.alert('Error', 'Failed to copy or open file.');
@@ -99,7 +98,6 @@ export default function UploadScreen() {
           return;
         }
       }
-
       let dest = `${RNFS.DocumentDirectoryPath}/${file.name}`;
 
       if (file.uri.startsWith('content://')) {
