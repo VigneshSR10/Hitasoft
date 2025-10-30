@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+'use client';
+
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -55,6 +57,7 @@ export default function FileCard({ file, onDelete }) {
       Alert.alert('Error', 'Failed to download file.');
     }
   };
+
   const openFileExternally = async () => {
     try {
       let filePath = file.uri;
@@ -123,6 +126,7 @@ export default function FileCard({ file, onDelete }) {
       </View>
     );
   };
+
   return (
     <>
       <View style={styles.card}>
@@ -191,6 +195,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
     marginVertical: 5,
+    marginHorizontal: 20,
+    elevation: 3,
   },
   name: { fontWeight: '600', color: colors.text },
   time: { color: '#6B7280', fontSize: 12 },

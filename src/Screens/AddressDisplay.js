@@ -1,10 +1,10 @@
-import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
@@ -25,13 +25,51 @@ export default function AddressDisplay() {
     if (key.includes('city')) return 'map-pin';
     if (key.includes('pincode')) return 'map';
     if (key.includes('flat')) return 'home';
+    if (key.includes('apartment')) return 'building';
+    if (key.includes('state')) return 'layers';
+    if (key.includes('country')) return 'globe';
     return 'info';
+  };
+
+  const handleEditAddress = () => {
+    navigation.goBack();
+  };
+
+  const handleClearAll = () => {
+    Alert.alert(
+      'Clear All Data',
+      'Are you sure you want to clear all address and file data?',
+      [
+        { text: 'Cancel', onPress: () => {} },
+        {
+          text: 'Clear',
+          onPress: () => {
+            setForm({
+              flat: '',
+              apartment: '',
+              city: '',
+              state: '',
+              country: '',
+              pincode: '',
+            });
+            setFiles([]);
+            navigation.goBack();
+          },
+          style: 'destructive',
+        },
+      ],
+    );
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <CommonHeader title="Details Screen" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.headerSection}>
+          <Icon name="check-circle" size={32} color={colors.primary} />
+          <Text style={styles.successText}>Address Submitted Successfully</Text>
+        </View>
+
         <Text style={styles.header}>Address Details</Text>
         <View style={styles.card}>
           {Object.entries(form).map(([key, value]) => (
@@ -50,51 +88,77 @@ export default function AddressDisplay() {
             </View>
           ))}
         </View>
+
         {files?.length > 0 && (
           <>
             <Text style={[styles.header, { marginTop: 25 }]}>
-              Uploaded Files
+              Uploaded Files ({files.length})
             </Text>
-            {files.map(f => (
-              <FileCard
-                key={f.id}
-                file={f}
-                onDelete={() =>
-                  setFiles(prev => prev.filter(x => x.id !== f.id))
-                }
-              />
-            ))}
+            <View style={styles.filesContainer}>
+              {files.map(f => (
+                <FileCard
+                  key={f.id}
+                  file={f}
+                  onDelete={() => {
+                    setFiles(prev => prev.filter(x => x.id !== f.id));
+                    Alert.alert('Success', 'File deleted successfully');
+                  }}
+                />
+              ))}
+            </View>
           </>
         )}
-        <TouchableOpacity
-          style={styles.uploadBtn}
-          onPress={() => {
-            setForm({
-              flat: '',
-              apartment: '',
-              city: '',
-              state: '',
-              country: '',
-              pincode: '',
-            });
-            setFiles([]);
-            navigation.goBack();
-          }}
-        >
-          <Text style={styles.uploadText}>Back</Text>
-        </TouchableOpacity>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.editBtn]}
+            onPress={handleEditAddress}
+          >
+            <Icon
+              name="edit-2"
+              size={18}
+              color="#fff"
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.buttonText}>Edit Address</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.button, styles.clearBtn]}
+            onPress={handleClearAll}
+          >
+            <Icon
+              name="trash-2"
+              size={18}
+              color="#fff"
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.buttonText}>Clear All</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: colors.background || '#F4F6FA' },
+  safeArea: { flex: 1, backgroundColor: colors.background },
   scrollContent: { padding: 16, paddingBottom: 40 },
+  headerSection: {
+    alignItems: 'center',
+    marginBottom: 24,
+    paddingVertical: 16,
+  },
+  successText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.primary,
+    marginTop: 8,
+  },
   header: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '700',
-    color: colors.primary || '#1E88E5',
+    color: colors.text,
     marginBottom: 12,
   },
   card: {
@@ -110,21 +174,39 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomColor: '#eee',
+    paddingVertical: 12,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
   },
   iconBox: { width: 40, alignItems: 'center' },
-  textBox: { flex: 1 },
-  keyText: { fontSize: 14, color: '#666' },
-  valueText: { fontSize: 16, fontWeight: '600', color: '#222' },
-  uploadBtn: {
-    backgroundColor: '#007AFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 14,
-    borderRadius: 12,
+  textBox: { flex: 1, marginLeft: 12 },
+  keyText: { fontSize: 13, color: colors.textSecondary, marginBottom: 4 },
+  valueText: { fontSize: 16, fontWeight: '600', color: colors.text },
+  filesContainer: {
+    marginBottom: 16,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    gap: 12,
     marginTop: 20,
   },
-  uploadText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  button: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    padding: 14,
+    borderRadius: 12,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  editBtn: {
+    backgroundColor: colors.primary,
+  },
+  clearBtn: {
+    backgroundColor: colors.danger,
+  },
+  buttonText: { color: '#fff', fontSize: 14, fontWeight: '600' },
 });

@@ -1,4 +1,3 @@
-import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import UploadScreen from '../Screens/UploadScreen';
@@ -9,24 +8,27 @@ import AddressForm from '../Screens/AddressForm';
 import Icon from 'react-native-vector-icons/Feather';
 import AddressDisplay from '../Screens/AddressDisplay';
 import MoreScreen from '../Screens/MoreScreen';
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+
 function AddressStack() {
   return (
-    <Stack.Navigator headerShown={false} screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
-        name="Address"
+        name="AddressForm"
         component={AddressForm}
-        headerShown={false}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="AddressDisplay"
         component={AddressDisplay}
-        headerShown={false}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
 }
+
 export default function BottomTabs() {
   return (
     <NavigationContainer>
@@ -34,12 +36,23 @@ export default function BottomTabs() {
         screenOptions={{
           headerShown: false,
           tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.textSecondary,
           tabBarStyle: {
             height: 70,
-
-            alignItems: 'center',
-
+            paddingBottom: 8,
+            paddingTop: 8,
             backgroundColor: '#fff',
+            borderTopColor: colors.border,
+            borderTopWidth: 1,
+            elevation: 8,
+            shadowColor: '#000',
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: '500',
+            marginTop: 4,
           },
         }}
       >
@@ -47,8 +60,9 @@ export default function BottomTabs() {
           name="Upload"
           component={UploadScreen}
           options={{
+            tabBarLabel: 'Upload',
             tabBarIcon: ({ color }) => (
-              <Icon name="upload" size={22} color={color} />
+              <Icon name="upload" size={24} color={color} />
             ),
           }}
         />
@@ -56,8 +70,9 @@ export default function BottomTabs() {
           name="Meet"
           component={MeetScreen}
           options={{
+            tabBarLabel: 'Meet',
             tabBarIcon: ({ color }) => (
-              <Icon name="video" size={22} color={color} />
+              <Icon name="video" size={24} color={color} />
             ),
           }}
         />
@@ -65,8 +80,9 @@ export default function BottomTabs() {
           name="Address"
           component={AddressStack}
           options={{
+            tabBarLabel: 'Address',
             tabBarIcon: ({ color }) => (
-              <Icon name="home" size={22} color={color} />
+              <Icon name="home" size={24} color={color} />
             ),
           }}
         />
@@ -74,8 +90,9 @@ export default function BottomTabs() {
           name="More"
           component={MoreScreen}
           options={{
+            tabBarLabel: 'More',
             tabBarIcon: ({ color }) => (
-              <Icon name="list" size={22} color={color} />
+              <Icon name="menu" size={24} color={color} />
             ),
           }}
         />
